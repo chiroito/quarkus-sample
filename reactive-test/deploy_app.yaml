@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: __APP__
+  labels:
+    app: __APP__
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: __APP__
+  template:
+    metadata:
+      labels:
+        app: __APP__
+    spec:
+      containers:
+        - name: __APP__-jvm
+          image: __REGISTRY_URL__/__PROJECT_NAME__/__APP__-jvm:latest
+          resources:
+            limits:
+              cpu: 1
+              memory: 1Gi
+            requests:
+              cpu: 1
+              memory: 1Gi
+          ports:
+            - containerPort: 8080
+            - containerPort: 9091
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: __APP__
+  name: __APP__
+spec:
+  ports:
+    - name: web
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: jfr-jmx
+      port: 9091
+      protocol: TCP
+      targetPort: 9091
+  selector:
+    app: __APP__
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: __APP__
+  name: __APP__
+  annotations:
+    haproxy.router.openshift.io/balance: roundrobin
+spec:
+  port:
+    targetPort: 8080
+  to:
+    kind: Service
+    name: __APP__
+    weight: 100
+  wildcardPolicy: None
