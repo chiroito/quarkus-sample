@@ -28,6 +28,7 @@ for APP in "${APPLICATIONS[@]}" ; do
   cd ${scriptDir}/${APP}
   mvn clean package
   podman build -f src/main/docker/Dockerfile.jvm -t ${PROJECT_NAME}/${APP}-jvm .
+  cd ${initialCwd}
   podman image tag ${PROJECT_NAME}/${APP}-jvm:latest ${REGISTRY_URL}/${PROJECT_NAME}/${APP}-jvm:latest
   podman push ${REGISTRY_URL}/${PROJECT_NAME}/${APP}-jvm:latest --tls-verify=false
   sed -e "s/__APP__/${APP}/g" -e "s/__PROJECT_NAME__/${PROJECT_NAME}/g" -e "s/__REGISTRY_URL__/${REGISTRY_URL}/g" ${scriptDir}/deploy_app.yaml > ${scriptDir}/${APP}/deploy_app.yaml
