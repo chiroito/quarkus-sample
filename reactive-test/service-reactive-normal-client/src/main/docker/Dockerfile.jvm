@@ -42,7 +42,7 @@ RUN microdnf install curl ca-certificates ${JAVA_PACKAGE} \
 
 # Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
 # ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -XX:MaxRAMPercentage=55 -XX:NewRatio=9 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -Dcom.sun.management.jmxremote.port=9091 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.autodiscovery=true -showversion"
+ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.concurrent.ForkJoinPool.common.parallelism=32 -XX:MaxRAMPercentage=55 -XX:NewRatio=9 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -Dcom.sun.management.jmxremote.port=9091 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.autodiscovery=true -showversion"
 # We make four distinct layers so if there are application changes the library layers can be re-used
 COPY --chown=1001 target/quarkus-app/lib/ /deployments/lib/
 COPY --chown=1001 target/quarkus-app/*.jar /deployments/
