@@ -8,6 +8,9 @@ RED_HAT_PAY_USER=opentlc-mgr
 RED_HAT_PAY_PASSWORD=r3dh4t1!
 oc login -u ${RED_HAT_PAY_USER} -p ${RED_HAT_PAY_PASSWORD}
 
+REGISTRY_URL=$(oc get route default-route -n openshift-image-registry --template={{.spec.host}})
+podman login -u $(oc whoami) -p $(oc whoami -t) ${REGISTRY_URL} --tls-verify=false
+
 PROJECT_NAME=reactive-test
 
 # set JAVA_HOME for Maven
