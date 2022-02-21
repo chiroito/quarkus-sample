@@ -1,5 +1,6 @@
 package com.example;
 
+import io.smallrye.common.annotation.Blocking;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
@@ -21,9 +22,27 @@ public class TestEndPoint {
     TestClientStr strClient;
 
     @GET
-    public Uni<Message> endpoint1() {
-//        return Uni.createFrom().item(strClient.getBlocking()); // NG
+    public Message endpoint1() {
+        return strClient.getBlocking();
+    }
+
+    @GET
+    @Path("/an")
+    @Blocking
+    public Uni<Message> endpoint2() {
+        return Uni.createFrom().item(strClient.getBlocking());
+    }
+
+    @GET
+    @Path("/cf")
+    public Uni<Message> endpoint3() {
         // -Djava.util.concurrent.ForkJoinPool.common.parallelismで並列度を変更する必要がある
         return Uni.createFrom().completionStage(CompletableFuture.supplyAsync(() -> strClient.getBlocking()));
+    }
+
+    @GET
+    @Path("/ng")
+    public Uni<Message> endpointNG() {
+        return Uni.createFrom().item(strClient.getBlocking());
     }
 }
