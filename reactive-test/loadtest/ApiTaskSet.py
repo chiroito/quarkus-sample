@@ -4,7 +4,7 @@ class ApiTaskSet(TaskSet):
 
     @task
     def loadtest(self):
-        response = self.client.post("/api")
+        response = self.client.get("/api")
 
 class LoadTest(HttpLocust):
     task_set = ApiTaskSet
