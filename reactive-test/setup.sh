@@ -9,7 +9,7 @@ RED_HAT_PAY_PASSWORD=r3dh4t1!
 oc login -u ${RED_HAT_PAY_USER} -p ${RED_HAT_PAY_PASSWORD}
 
 # create route for registry
-oc patch configs.imageregistry.operator.openshift.io/cluster --type merge -p '{"spec":{"defaultRoute":true}}'
+oc patch configs.imageregistry.operator.openshift.io/cluster -n openshift-image-registry --type merge -p '{"spec":{"defaultRoute":true}}'
 REGISTRY_URL=$(oc get route default-route -n openshift-image-registry --template={{.spec.host}})
 podman login -u $(oc whoami) -p $(oc whoami -t) ${REGISTRY_URL} --tls-verify=false
 
