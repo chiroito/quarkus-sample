@@ -46,15 +46,11 @@ for APP in "${APPLICATIONS[@]}" ; do
   oc apply -n ${PROJECT_NAME} -f ${scriptDir}/${APP}/deploy_app.yaml
 done
 
-oc apply -n ${PROJECT_NAME} -f ${scriptDir}/deploy_cryostat.yaml
-
 echo "******"
 echo "service-normal                : http://`oc -n reactive-test get route service-normal -o jsonpath='{.spec.host}'`/api"
 echo "service-reactive              : http://`oc -n reactive-test get route service-reactive -o jsonpath='{.spec.host}'`/api"
 echo "service-reactive-normal-client: http://`oc -n reactive-test get route service-reactive-normal-client -o jsonpath='{.spec.host}'`/api"
 echo "child-service-reactive        : http://`oc -n reactive-test get route child-service-reactive -o jsonpath='{.spec.host}'`/delay"
-
-echo "Cryostat                      : http://`oc -n reactive-test get route cryostat-sample -o jsonpath='{.spec.host}'`"
 
 
 cd ${initialCwd}
