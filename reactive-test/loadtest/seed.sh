@@ -60,6 +60,7 @@ rm ${scriptDir}/config-map.yaml
 
 # Update the environment variable to trigger a change
 oc set env -n locust dc/locust-master --overwrite CONFIG_HASH=`date +%s%N`
+sleep 2
 oc set env -n locust dc/locust-slave --overwrite CONFIG_HASH=`date +%s%N`
 
 oc project ${CURRENT_NS}
