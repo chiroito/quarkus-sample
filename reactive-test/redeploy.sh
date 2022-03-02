@@ -16,12 +16,20 @@ PROJECT_NAME=reactive-test
 # set JAVA_HOME for Maven
 export JAVA_HOME=/usr/lib/jvm/`rpm -q java-11-openjdk-devel | sed s/devel-//g`
 
+cd ${scriptDir}/child-service-reactive
+mvn clean package
+podman build -f src/main/docker/Dockerfile.jvm -t ${PROJECT_NAME}/child-service-reactive-jvm .
+cd ${initialCwd}
+podman image tag ${PROJECT_NAME}/child-service-reactive-jvm:latest ${REGISTRY_URL}/${PROJECT_NAME}/child-service-reactive-jvm:latest
+podman push ${REGISTRY_URL}/${PROJECT_NAME}/child-service-reactive-jvm:latest --tls-verify=false
+sed -e "s/__PROJECT_NAME__/${PROJECT_NAME}/g" -e "s/__REGISTRY_URL__/${REGISTRY_URL}/g" ${scriptDir}/deploy_child_app.yaml > ${scriptDir}/child-service-reactive/deploy_child_app.yaml
+oc apply -n ${PROJECT_NAME} -f ${scriptDir}/child-service-reactive/deploy_child_app.yaml
+
 
 APPLICATIONS=(
 "service-normal"
 "service-reactive"
 "service-reactive-normal-client"
-"child-service-reactive"
 )
 
 for APP in "${APPLICATIONS[@]}" ; do
