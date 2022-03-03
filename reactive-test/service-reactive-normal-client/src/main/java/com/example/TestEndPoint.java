@@ -12,9 +12,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.concurrent.CompletableFuture;
 
-@Path("/api")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Path("/")
 public class TestEndPoint {
 
     @Inject
@@ -22,27 +22,32 @@ public class TestEndPoint {
     TestClientStr strClient;
 
     @GET
+    @Path("/api")
     public Message endpoint1() {
+        // メソッドの戻り値をUniにしないことで、このメソッドをブロッキングで実行する
         return strClient.getBlocking();
     }
 
     @GET
-    @Path("/an")
+    @Path("/annotation/api")
     @Blocking
     public Uni<Message> endpoint2() {
+        // メソッドの戻り値はUniを返すが、このメソッドはブロッキングで実行するようアノテーションで明示的に指定する
         return Uni.createFrom().item(strClient.getBlocking());
     }
 
     @GET
-    @Path("/cf")
+    @Path("/completableFuture/api")
     public Uni<Message> endpoint3() {
-        // -Djava.util.concurrent.ForkJoinPool.common.parallelismで並列度を変更する必要がある
+        // Javaの標準APIを使ってノンブロッキング用のスレッドから非同期処理を実行する
+        // 並列度は-Djava.util.concurrent.ForkJoinPool.common.parallelismでチューニングする必要がある
         return Uni.createFrom().completionStage(CompletableFuture.supplyAsync(() -> strClient.getBlocking()));
     }
 
     @GET
-    @Path("/ng")
+    @Path("/blocking/api")
     public Uni<Message> endpointNG() {
+        // ノンブロッキング用のスレッドでブロッキング処理を呼ぶ
         return Uni.createFrom().item(strClient.getBlocking());
     }
 }
