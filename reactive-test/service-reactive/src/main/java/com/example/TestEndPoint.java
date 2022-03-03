@@ -17,10 +17,10 @@ public class TestEndPoint {
 
     @Inject
     @RestClient
-    TestClientUni uniClient;
+    NonBlockingRestClient nonBlockingRestClient;
 
     @GET
     public Uni<Message> endpoint() {
-        return uniClient.getNonBlocking();
+        return nonBlockingRestClient.invoke();
     }
 }

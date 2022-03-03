@@ -16,10 +16,10 @@ public class TestEndPoint {
 
     @Inject
     @RestClient
-    TestClientStr strClient;
+    BlockingRestClient blockingRestClient;
 
     @GET
     public Message endpoint() {
-        return strClient.getBlocking();
+        return blockingRestClient.invoke();
     }
 }
