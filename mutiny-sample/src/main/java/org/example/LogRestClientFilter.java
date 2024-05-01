@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 @Provider
-public class JfrRestClientFilter implements ClientRequestFilter, ClientResponseFilter {
+public class LogRestClientFilter implements ClientRequestFilter, ClientResponseFilter {
 
     @Override
     public void filter(ClientRequestContext requestContext)
